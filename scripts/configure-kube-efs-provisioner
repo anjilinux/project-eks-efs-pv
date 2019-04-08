@@ -1,0 +1,11 @@
+# This is a stupid script. If you have more than 1 efs it will fail.
+# Use at your own risk. But if you followed the installation instructions to the letter it should make the config process fast.
+
+# This will populate manifest.yaml with the correct parameters
+
+fs=`aws efs describe-file-systems --query FileSystems[].FileSystemId[] --output text`
+sed "s|myfs|${fs}|" manifest.yaml.txt > manifest.yaml
+
+kubectl apply -f ~/special-rebac.yaml
+kubectl apply -f ~/manifest.yaml
+

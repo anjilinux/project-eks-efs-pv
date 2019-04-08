@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: kskalvar/web
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - name: efs-pvc
+            mountPath: "/mnt"
+      restartPolicy: "Always"
+      volumes:
+        - name: efs-pvc
+          persistentVolumeClaim:
+           claimName: efs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: LoadBalancer
+  selector:
+    app: web
+  ports:
+  - name: http
+    port: 80
+    targetPort: 5000
+    protocol: TCP
