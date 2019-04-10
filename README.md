@@ -159,9 +159,9 @@ On the left hand side bar
 Click on "Security Groups"  
 
 Select the "default" security group for the "VPC ID" where your EKS Cluster resides  
-Click on "Inbound Rules"
-Click on Edit Rules
-Delete "NFS" Rule
+Click on "Inbound Rules"  
+Click on Edit Rules  
+Delete "NFS" Rule  
 Save
 
 ### Remove AWS EFS File System
