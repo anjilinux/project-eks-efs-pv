@@ -1,5 +1,5 @@
-AWS Elastic Kubernetes Service (EKS) EFS Provisioner QuickStart  
-===============================================
+AWS Elastic Kubernetes Service (EKS) EFS Provisioner  
+===================================================
 
 This solution shows you how to create Persistent Storage for an AWS EKS Cluster using AWS EFS. This readme updates an article "efs-provisioner" referenced below and provides a more basic step by step process.  
 
@@ -28,6 +28,7 @@ Click on "Create file system"
 ```
 Configure file system access:
 VPC: <Select VPC created for your EKS Cluster>
+
 Create mount targets:
 Availability Zone: It will auto-populate Availability Zones based on your VPC selection
 Subnet: It will auto-populate Availability Zones based on your VPC selection
@@ -52,12 +53,12 @@ for your EKS Cluster.  Note:  Both should appear within the same "VPC ID"
 sg-<group id> eks-cluster-demo-EKSNodeGroup-*-NodeSecurityGroup-*   vpc-<vpc id>
 sg-<group id> default                                               vpc-<vpc-id>
 ```
-Copy the "sg-<group id>" for the "NodeSecurityGroup"  
+Copy the "Group ID" for the "NodeSecurityGroup"  
 
 Select the "default" security group for the "VPC ID" where your EKS Cluster resides  
-Click on "Inbound Rules"
-Click on Edit Rules
-Click on "Add Rule"
+Click on "Inbound Rules"  
+Click on Edit Rules  
+Click on "Add Rule"  
 ```
 Type: NFS
 Protocol: TCP
@@ -131,10 +132,10 @@ kubectl get pods
 ### Inspect each container 
 Test each of the containers listed above using the following procedure
 ```
-kubectl exec -it web-<replica set>-<random string> bash
+kubectl exec -it <web container> bash
 cd /mnt
 ls
-touch web-<replica set>-<random string>
+touch <unique file name>
 exit
 ```
 
@@ -142,11 +143,15 @@ exit
 You will need to ssh into the AWS EC2 Instance you created with the EKS Cluster which has kubectl. This is a step by step process.
 
 ### Delete web-deployment-service
+Delete web service
+```
 kubectl delete -f web-deployment-service.yaml
-
-
+```
 ### Delete EKS EFS Provisioner
+Delete EFS Provisioner from EKS
+```
 kubectl delete -f manifest.yaml
+```
 
 ### Remove NFS Inbound Rule from default VPC Security Group
 #### AWS EC2 Dashboard
@@ -161,10 +166,10 @@ Save
 
 ### Remove AWS EFS File System
 #### AWS EFS Dashboard
-File systems:
-Select fs-<file system id>
-Click on "Actions"
-Select "Delete file system"
+File systems:  
+Select fs-<file system id>  
+Click on "Actions"  
+Select "Delete file system"  
 
 
 ## References
