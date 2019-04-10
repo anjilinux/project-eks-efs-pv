@@ -31,9 +31,9 @@ VPC: <Select VPC created for your EKS Cluster>
 
 Create mount targets:
 Availability Zone: It will auto-populate Availability Zones based on your VPC selection
-Subnet: It will auto-populate Availability Zones based on your VPC selection
+Subnet: It will auto-populate Subnets based on your VPC selection
 IP Address:  Automatic
-Security groups: It will auto-populate your default security groups based on your VPC selection
+Security groups: It will auto-populate your default security group based on your VPC selection
 ```
 Click on "Next Step"  
 Click on "Next Step"  
@@ -113,7 +113,17 @@ kubectl apply -f ~/manifest.yaml
 ```
 
 ### Verify EFS Provisioner from Kubernetes Dashboard
+To verify the EFS Provisioner is working correctly do the following:  
+#### Kubernetes Dashboard:  
 
+Click on "Cluster/Storage Classes"  
+Storage Classes should show "aws-efs"  
+
+Click on "Workloads/Deployments"  
+Pods should show "efs-provisioner"  
+
+Click on "Config and Storage/Persistent Volume Claims"  
+Persistent Volume Claims should show "efs"
 
 
 ## Test EKS EFS Provisioner
