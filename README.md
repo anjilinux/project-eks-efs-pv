@@ -167,7 +167,7 @@ Save
 ### Remove AWS EFS File System
 #### AWS EFS Dashboard
 File systems:  
-Select fs-<file system id>  
+Select "file system id"   
 Click on "Actions"  
 Select "Delete file system"  
 
