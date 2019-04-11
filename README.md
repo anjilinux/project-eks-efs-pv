@@ -27,7 +27,7 @@ Be sure your EKS Cluster is up and running as you'll be putting a mount target i
 Click on "Create file system"  
 ```
 Configure file system access:
-VPC: <Select VPC created for your EKS Cluster>
+VPC: eks-cluster-demo-EKSVpc-*-VPC
 
 Create mount targets:
 Availability Zone: It will auto-populate Availability Zones based on your VPC selection
@@ -47,15 +47,17 @@ Wait for all Mount target state to appear as "Available" before proceeding
 On the left hand side bar  
 Click on "Security Groups"  
 
-Identify the "Group ID" for both the "default" "VPC ID" for your EKS Cluster and the "NodeSecurityGroup"    
-for your EKS Cluster.  Note:  Both should appear within the same "VPC ID"
+Identify the "Group ID" for the "default" Security Group for your EKS Cluster VPC  
+Identify the "Group ID" for the "NodeSecurityGroup" for your EKS Cluster VPC  
+Note:  Both should have the same "VPC ID"  
 ```
+Group ID      Group Name                                            VPC ID
 sg-<group id> eks-cluster-demo-EKSNodeGroup-*-NodeSecurityGroup-*   vpc-<vpc id>
 sg-<group id> default                                               vpc-<vpc-id>
 ```
 Copy the "Group ID" for the "NodeSecurityGroup"  
 
-Select the "default" security group for the "VPC ID" where your EKS Cluster resides  
+Select the "default" Security Group for the "VPC ID" where your EKS Cluster resides  
 Click on "Inbound Rules"  
 Click on Edit Rules  
 Click on "Add Rule"  
