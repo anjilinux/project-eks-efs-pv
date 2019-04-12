@@ -1,19 +1,7 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Create Elastic File System v20161029-1200",
+    "Description": "Amazon EKS - EFS",
     "Parameters": {
-        "Owner": {
-            "Type": "String",
-            "Default": "FirstName LastName"
-        },
-        "Project": {
-            "Type": "String",
-            "Default": "EFS Mount"
-        },
-        "DeleteAfter": {
-            "Type": "String",
-            "Default": "00/00/201x"
-        },
         "VPC": {
             "Type": "AWS::EC2::VPC::Id"
         },
@@ -25,6 +13,9 @@
         },
         "Subnet3": {
             "Type": "AWS::EC2::Subnet::Id"
+        },
+        "EKSNodeGroup": {
+            "Type": "AWS::EC2::SecurityGroup::Id"
         },
         "PerformanceMode": {
             "Type": "String",
@@ -39,32 +30,6 @@
         "FileSystem": {
             "Type": "AWS::EFS::FileSystem",
             "Properties": {
-                "FileSystemTags": [
-                    {
-                        "Key": "Name",
-                        "Value": {
-                            "Ref": "AWS::StackName"
-                        }
-                    },
-                    {
-                        "Key": "Owner",
-                        "Value": {
-                            "Ref": "Owner"
-                        }
-                    },
-                    {
-                        "Key": "Project",
-                        "Value": {
-                            "Ref": "Project"
-                        }
-                    },
-                    {
-                        "Key": "DeleteAfter",
-                        "Value": {
-                            "Ref": "DeleteAfter"
-                        }
-                    }
-                ],
                 "PerformanceMode": {
                     "Ref": "PerformanceMode"
                 }
@@ -74,7 +39,7 @@
             "Type": "AWS::EFS::MountTarget",
             "DependsOn": [
                 "FileSystem",
-                "EfsSecurityGroup"
+                "EFSSecurityGroup"
             ],
             "Properties": {
                 "FileSystemId": {
@@ -85,7 +50,7 @@
                 },
                 "SecurityGroups": [
                     {
-                        "Ref": "EfsSecurityGroup"
+                        "Ref": "EFSSecurityGroup"
                     }
                 ]
             }
@@ -94,7 +59,7 @@
             "Type": "AWS::EFS::MountTarget",
             "DependsOn": [
                 "FileSystem",
-                "EfsSecurityGroup"
+                "EFSSecurityGroup"
             ],
             "Properties": {
                 "FileSystemId": {
@@ -105,7 +70,7 @@
                 },
                 "SecurityGroups": [
                     {
-                        "Ref": "EfsSecurityGroup"
+                        "Ref": "EFSSecurityGroup"
                     }
                 ]
             }
@@ -114,7 +79,7 @@
             "Type": "AWS::EFS::MountTarget",
             "DependsOn": [
                 "FileSystem",
-                "EfsSecurityGroup"
+                "EFSSecurityGroup"
             ],
             "Properties": {
                 "FileSystemId": {
@@ -125,73 +90,51 @@
                 },
                 "SecurityGroups": [
                     {
-                        "Ref": "EfsSecurityGroup"
+                        "Ref": "EFSSecurityGroup"
                     }
                 ]
             }
         },
-        "EfsSecurityGroup": {
+        "EFSSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
                 "GroupDescription": "Instance to EFS Mount Access",
                 "VpcId": {
                     "Ref": "VPC"
-                },
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": {
-                            "Ref": "AWS::StackName"
-                        }
-                    },
-                    {
-                        "Key": "Owner",
-                        "Value": {
-                            "Ref": "Owner"
-                        }
-                    },
-                    {
-                        "Key": "Project",
-                        "Value": {
-                            "Ref": "Project"
-                        }
-                    },
-                    {
-                        "Key": "DeleteAfter",
-                        "Value": {
-                            "Ref": "DeleteAfter"
-                        }
-                    }
-                ]
+                }
             }
         },
         "SecurityGroupIngress": {
             "Type": "AWS::EC2::SecurityGroupIngress",
-            "DependsOn": "EfsSecurityGroup",
+            "DependsOn": "EFSSecurityGroup",
             "Properties": {
                 "GroupId": {
-                    "Ref": "EfsSecurityGroup"
+                    "Ref": "EFSSecurityGroup"
                 },
                 "IpProtocol": "-1",
                 "SourceSecurityGroupId": {
-                    "Ref": "EfsSecurityGroup"
+                    "Ref": "EFSSecurityGroup"
+                }
+            }
+        },
+        "SecurityGroupIngress2": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "DependsOn": "EFSSecurityGroup",
+            "Properties": {
+                "GroupId": {
+                    "Ref": "EFSSecurityGroup"
+                },
+                "IpProtocol": "tcp",
+                "FromPort": "2049",
+                "ToPort": "2049",
+                "SourceSecurityGroupId": {
+                    "Ref": "EKSNodeGroup"
                 }
             }
         }
     },
     "Outputs": {
-        "Owner": {
-            "Description": "Team or Individual that Owns this Formation.",
-            "Value": {
-                "Ref": "Owner"
-            }
-        },
-        "Project": {
-            "Description": "The project name",
-            "Value": {
-                "Ref": "Project"
-            }
-        },
+ 
         "VPC": {
             "Description": "Created VPC",
             "Value": {
@@ -244,64 +187,6 @@
             "Description": "MountTarget 3",
             "Value": {
                 "Ref": "MountTarget1"
-            }
-        }
-    },
-    "Metadata": {
-        "AWS::CloudFormation::Interface": {
-            "ParameterGroups": [
-                {
-                    "Label": {
-                        "default": "Ownership"
-                    },
-                    "Parameters": [
-                        "Owner",
-                        "Project",
-                        "DeleteAfter"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "Network Configuration"
-                    },
-                    "Parameters": [
-                        "VPC",
-                        "Subnet1",
-                        "Subnet2",
-                        "Subnet3"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "EFS Configuration"
-                    },
-                    "Parameters": [
-                        "PerformanceMode"
-                    ]
-                }
-            ],
-            "ParameterLabels": {
-                "Owner": {
-                    "default": "Team or Individual Owner"
-                },
-                "DeleteAfter": {
-                    "default": "Delete After Date"
-                },
-                "VPC": {
-                    "default": "VPC ID"
-                },
-                "Subnet1": {
-                    "default": "Subnet 1"
-                },
-                "Subnet2": {
-                    "default": "Subnet 2"
-                },
-                "Subnet3": {
-                    "default": "Subnet 3"
-                },
-                "PerformanceMode": {
-                    "default": "EFS Performance Mode"
-                }
             }
         }
     }
