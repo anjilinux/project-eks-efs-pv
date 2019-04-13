@@ -117,10 +117,13 @@ To verify the EFS Provisioner is working correctly do the following:
 #### Kubernetes Dashboard:  
 
 Click on "Cluster/Storage Classes"  
-Storage Classes should show "aws-efs" green  
+Storage Classes should show "aws-efs"  
 
 Click on "Workloads/Deployments"  
-Pods should show "efs-provisioner" green
+Deployments should show "efs-provisioner" green
+
+Click on "Workloads/Pods"  
+Pods should show "efs-provisioner" green  
 
 Click on "Config and Storage/Persistent Volume Claims"  
 Persistent Volume Claims should show "efs" green
