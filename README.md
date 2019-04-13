@@ -20,6 +20,8 @@ Please see "AWS Elastic Kubernetes Service (EKS) QuickStart" link below for sett
 https://github.com/kskalvar/aws-eks-cluster-quickstart
 ```
 
+Wait for EKS Cluster configuration to complete before proceeding    
+
 ## Configure AWS EFS Security Group
 ### AWS EC2 Dashboard
 On the left hand side bar  
@@ -29,7 +31,7 @@ Click on "Create Security Group"
 ```
 Security group name: eks-cluster-demo-efs-security-group
 Description: eks-cluster-demo-efs-security-group
-VPC: <VPC which your EKS Cluster is located>
+VPC: eks-cluster-demo-EKSVpc-*-VPC
 ```
 Click on "Create"  
 
@@ -115,13 +117,13 @@ To verify the EFS Provisioner is working correctly do the following:
 #### Kubernetes Dashboard:  
 
 Click on "Cluster/Storage Classes"  
-Storage Classes should show "aws-efs"  
+Storage Classes should show "aws-efs" green  
 
 Click on "Workloads/Deployments"  
-Pods should show "efs-provisioner"  
+Pods should show "efs-provisioner" green
 
 Click on "Config and Storage/Persistent Volume Claims"  
-Persistent Volume Claims should show "efs"
+Persistent Volume Claims should show "efs" green
 
 
 ## Test EKS EFS Provisioner
