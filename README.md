@@ -41,7 +41,7 @@ Click on "Edit inbound rules"
 ```
 Type        Protocol  Port Range     Source 
 All Traffic All       0 - 65535      Custom <eks-cluster-demo-efs-security-group Security GROUP ID>
-NFS         TCP       2049           Custom <eks-cluster-demo*NodeGroup* Security GROUP ID> 
+NFS         TCP       2049           Custom <eks-cluster-demo*EKSNodeGroup* Security GROUP ID> 
 ```
 Click on "Save"  
 
