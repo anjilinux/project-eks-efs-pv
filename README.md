@@ -58,7 +58,7 @@ Create mount targets:
 Availability Zone: It will auto-populate Availability Zones based on your VPC selection
 Subnet: It will auto-populate Subnets based on your VPC selection
 IP Address:  Automatic
-Security groups: It will auto-populate your default security group based on your VPC selection
+Security groups: It will auto-populate, changed to <eks-cluster-demo-efs-security-group> you created above
 ```
 Click on "Next Step"  
 Click on "Next Step"  
