@@ -5,8 +5,8 @@ This solution shows you how to create Persistent Storage for an AWS EKS Cluster 
 
 Steps:  
   Create Amazon EKS Cluster  
-  Create AWS EFS  
   Configure AWS EFS Security Group  
+  Create AWS EFS  
   Checkout aws-eks-efs-provisioner from github  
   Configure EKS EFS Provisioner  
   Test EKS EFS Provisioner  
@@ -19,6 +19,29 @@ Please see "AWS Elastic Kubernetes Service (EKS) QuickStart" link below for sett
 ```
 https://github.com/kskalvar/aws-eks-cluster-quickstart
 ```
+
+## Configure AWS EFS Security Group
+### AWS EC2 Dashboard
+On the left hand side bar  
+Click on "Security Groups"  
+
+Click on "Create Security Group"
+```
+Security group name: eks-cluster-demo-efs-security-group
+Description: eks-cluster-demo-efs-security-group
+VPC: <VPC which your EKS Cluster is located>
+```
+Click on "Create"  
+
+Select "eks-cluster-demo-efs-security-group"  
+Click on "Actions"  
+Click on "Edit inbound rules"  
+```
+Type        Protocol  Port Range     Source 
+All Traffic All       0 - 65535      Custom <eks-cluster-demo-efs-security-group Security GROUP ID>
+NFS         TCP       2049           Custom <eks-cluster-demo*NodeGroup* Security GROUP ID> 
+```
+Click on "Save"  
 
 ## Create AWS EFS
 Be sure your EKS Cluster is up and running as you'll be putting a mount target in each of your Cluster's Availability Zones.
@@ -41,33 +64,6 @@ Click on "Create File System"
 
 Scroll down to "Mount targets" section  
 Wait for all Mount target state to appear as "Available" before proceeding  
-
-## Configure AWS EFS Security Group
-### AWS EC2 Dashboard
-On the left hand side bar  
-Click on "Security Groups"  
-
-Identify the "Group ID" for the "default" Security Group for your EKS Cluster VPC  
-Identify the "Group ID" for the "NodeSecurityGroup" for your EKS Cluster VPC  
-Note:  Both should have the same "VPC ID"  
-```
-Group ID      Group Name                                            VPC ID
-sg-<group id> eks-cluster-demo-EKSNodeGroup-*-NodeSecurityGroup-*   vpc-<vpc id>
-sg-<group id> default                                               vpc-<vpc-id>
-```
-Copy the "Group ID" for the "NodeSecurityGroup"  
-
-Select the "default" Security Group for the "VPC ID" where your EKS Cluster resides  
-Click on "Inbound Rules"  
-Click on Edit Rules  
-Click on "Add Rule"  
-```
-Type: NFS
-Protocol: TCP
-Port Range: 2049
-Source: Custom
-Text Field: "sg-<group id>" for the "NodeSecurityGroup"
-```
 
 ## Checkout aws-eks-efs-provisioner from github
 You will need to ssh into the AWS EC2 Instance you created with the EKS Cluster which has kubectl. This is a step by step process.   
@@ -165,23 +161,21 @@ Delete EFS Provisioner from EKS
 kubectl delete -f manifest.yaml
 ```
 
-### Remove NFS Inbound Rule from default VPC Security Group
-#### AWS EC2 Dashboard
-On the left hand side bar  
-Click on "Security Groups"  
-
-Select the "default" security group for the "VPC ID" where your EKS Cluster resides  
-Click on "Inbound Rules"  
-Click on Edit Rules  
-Delete "NFS" Rule  
-Save
-
 ### Remove AWS EFS File System
 #### AWS EFS Dashboard
 File systems:  
 Select "file system id"   
 Click on "Actions"  
 Select "Delete file system"  
+
+### Remove EFS Security Group
+#### AWS EC2 Dashboard
+On the left hand side bar  
+Click on "Security Groups"  
+
+Select "eks-cluster-demo-efs-security-group"   
+Click on "Actions" button  
+Select "Delete Security Group"  
 
 
 ## References
