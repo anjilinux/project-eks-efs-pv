@@ -7,7 +7,7 @@ Steps:
   Create Amazon EKS Cluster  
   Configure AWS EFS Security Group  
   Create AWS EFS  
-  Checkout aws-eks-efs-provisioner from github  
+  Checkout aws-eks-efs-provisioner project from github  
   Configure EKS EFS Provisioner  
   Test EKS EFS Provisioner  
   Remove AWS EFS Provisioner  
@@ -67,7 +67,7 @@ Click on "Create File System"
 Scroll down to "Mount targets" section  
 Wait for all Mount target state to appear as "Available" before proceeding  
 
-## Checkout aws-eks-efs-provisioner from github
+## Checkout aws-eks-efs-provisioner project from github
 You will need to ssh into the AWS EC2 Instance you created with the EKS Cluster which has kubectl. This is a step by step process.   
 
 On the instance you have kubectl configured, checkout the provisioner repo from github.  
